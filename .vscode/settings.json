@@ -1,0 +1,6 @@
+{
+    "dotnet.defaultSolution": "WebApplication1.sln",
+    "java.project.sourcePaths": [
+        "WebApp3/Data"
+    ]
+}
