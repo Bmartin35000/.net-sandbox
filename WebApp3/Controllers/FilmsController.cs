@@ -9,11 +9,11 @@ using WebApp3.Data;
 
 namespace WebApp3.Controllers
 {
-    public class FilmController : Controller
+    public class FilmsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public FilmController(ApplicationDbContext context)
+        public FilmsController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -48,9 +48,6 @@ namespace WebApp3.Controllers
             return View();
         }
 
-        // POST: Film/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Titre,Annee")] Film film)

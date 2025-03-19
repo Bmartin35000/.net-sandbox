@@ -1,0 +1,48 @@
+@model IEnumerable<ModeleVueFilm>
+
+@{
+    ViewData["Title"] = "Ma liste de films";
+}
+
+<h1>Ma liste de films</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Titre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Annee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vu)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Note)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Titre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Annee)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Vu)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Note)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdFilm">Edit</a> |
+                @Html.ActionLink("Supprimer", "Delete", "ListeFilms", new {item=item}) @* TODO FIX *@
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
