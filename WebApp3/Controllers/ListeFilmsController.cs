@@ -31,6 +31,9 @@ namespace WebApp3.Controllers
         public async Task<IActionResult> Index()
         {
             var id = await RecupererIdUtilisateurCourant();
+            if (id == null) {
+                return NotFound();
+            }
             var filmsUtilisateur = _contexte.FilmsUtilisateur.Where(x => x.IdUtilisateur == id); // table FilmUser
             var modele = filmsUtilisateur.Select(x => new ModeleVueFilm // join table Film & FilmUser
             {
@@ -38,7 +41,6 @@ namespace WebApp3.Controllers
                 Titre = x.Film.Titre,
                 Annee = x.Film.Annee,
                 Vu = x.Vu,
-                PresentDansListe = true,
                 Note = x.Note
             }).ToList();
             
@@ -63,7 +65,6 @@ namespace WebApp3.Controllers
             _logger.LogInformation(filmUtilisateur.ToString());
 
             Utilisateur user = await GetCurrentUserAsync();
-            // TODO vérifier user login !
 
             filmUtilisateur.IdUtilisateur = user.Id;
             filmUtilisateur.User = user;
@@ -83,6 +84,9 @@ namespace WebApp3.Controllers
             _logger.LogInformation("Delete");
 
             string userId = await RecupererIdUtilisateurCourant();
+            if (userId == null) {
+                return NotFound();
+            }
             FilmUtilisateur fu = _contexte.FilmsUtilisateur.Where(x => x.IdFilm == idFilm && x.IdUtilisateur == userId).ToList().FirstOrDefault();
             _logger.LogInformation(fu.ToString());
 
@@ -94,7 +98,6 @@ namespace WebApp3.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             string userId = await RecupererIdUtilisateurCourant();
-
             if (userId == null) {
                 return NotFound();
             }
