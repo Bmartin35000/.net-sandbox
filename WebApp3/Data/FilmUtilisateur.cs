@@ -7,7 +7,7 @@ public class FilmUtilisateur
  public virtual Utilisateur? User { get; set; }
 public virtual Film? Film { get; set; }
     public  override string ToString()  {
-        return "IdUtilisateur : "+IdUtilisateur +" IdFilm : "+ IdFilm +" Vu : "+ Vu +" Note : "+ Note;
+        return "IdUtilisateur : "+IdUtilisateur +" IdFilm : "+ IdFilm +" Vu : "+ Vu +" Note : "+ Note +  " Utilisateur :"+ User +  " Film :"+ Film;
     }
    
 }

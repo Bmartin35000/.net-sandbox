@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebApp3.Models;
 
@@ -8,21 +9,17 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, UserManager<Utilisateur> gestionnaire)
     {
         _logger = logger;
     }
 
     public IActionResult Index()
     {
-        if (User.Identity?.IsAuthenticated == true)
-        {
-            return RedirectToAction("Index", "ListeFilms");
-        }
         return View();
     }
 
-    public IActionResult Privacy()
+    public IActionResult About()
     {
         return View();
     }

@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApp3.Data;
 
@@ -43,6 +39,7 @@ namespace WebApp3.Controllers
         }
 
         // GET: Film/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -50,7 +47,8 @@ namespace WebApp3.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Titre,Annee")] Film film)
+        [Authorize]
+        public async Task<IActionResult> Create([Bind("Id,Titre,Annee")] Film film) // Créer un obj film à partir des champs de la request
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +60,7 @@ namespace WebApp3.Controllers
         }
 
         // GET: Film/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -82,6 +81,7 @@ namespace WebApp3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Titre,Annee")] Film film)
         {
             if (id != film.Id)
@@ -113,6 +113,7 @@ namespace WebApp3.Controllers
         }
 
         // GET: Film/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,6 +134,7 @@ namespace WebApp3.Controllers
         // POST: Film/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var film = await _context.Films.FindAsync(id);

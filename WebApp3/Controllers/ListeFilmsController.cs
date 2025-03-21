@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using WebApp3.Data;
 
 namespace WebApp3.Controllers
 {
+    [Authorize]
     public class ListeFilmsController : Controller {
         private readonly ApplicationDbContext _contexte;
         private readonly UserManager<Utilisateur> _gestionnaire; // service de .NET Identity pour user connecté
@@ -64,7 +60,11 @@ namespace WebApp3.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Vu,Note,IdFilm")] FilmUtilisateur filmUtilisateur)
         {
+            _logger.LogInformation(filmUtilisateur.ToString());
+
             Utilisateur user = await GetCurrentUserAsync();
+            // TODO vérifier user login !
+
             filmUtilisateur.IdUtilisateur = user.Id;
             filmUtilisateur.User = user;
 
@@ -79,17 +79,46 @@ namespace WebApp3.Controllers
             return View(filmUtilisateur);
         }
 
-        public async Task<IActionResult> Delete(ModeleVueFilm item) {
-            string userId = await RecupererIdUtilisateurCourant();
+        public async Task<IActionResult> Delete(int idFilm) {
             _logger.LogInformation("Delete");
-            _logger.LogInformation(item.ToString());
 
-            FilmUtilisateur fu = _contexte.FilmsUtilisateur.Where(x => x.IdFilm == item.IdFilm && x.IdUtilisateur == userId).ToList().FirstOrDefault();
-            _logger.LogInformation("fu.ToString()");
+            string userId = await RecupererIdUtilisateurCourant();
+            FilmUtilisateur fu = _contexte.FilmsUtilisateur.Where(x => x.IdFilm == idFilm && x.IdUtilisateur == userId).ToList().FirstOrDefault();
             _logger.LogInformation(fu.ToString());
 
-            _contexte.Remove(fu);
+            _contexte.FilmsUtilisateur.Remove(fu);
+            await _contexte.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            string userId = await RecupererIdUtilisateurCourant();
+
+            if (userId == null) {
+                return NotFound();
+            }
+            List<FilmUtilisateur> filmsUtilisateur = _contexte.FilmsUtilisateur.Where(x => x.IdFilm == id && x.IdUtilisateur == userId).ToList();
+            
+            if (filmsUtilisateur == null || filmsUtilisateur.Count() == 0) {
+                return NotFound();
+            } else {
+                FilmUtilisateur filmUtilisateur = filmsUtilisateur.First();
+                return View(filmUtilisateur);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit([Bind("Vu,Note,IdFilm,IdUtilisateur")] FilmUtilisateur filmUtilisateur)
+        {
+            if (ModelState.IsValid)
+            {
+                _contexte.FilmsUtilisateur.Update(filmUtilisateur);
+                await _contexte.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(filmUtilisateur);
         }
     }
 }

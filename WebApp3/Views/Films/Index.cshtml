@@ -31,7 +31,9 @@
                 @Html.DisplayFor(modelItem => item.Annee)
             </td>
             <td>
-                @Html.ActionLink("Ajouter à ma liste de films", "Create", "ListeFilms", new {idFilm=item?.Id})
+                @if (User.Identity?.IsAuthenticated == true) {
+                    @Html.ActionLink("Ajouter à ma liste de films", "Create", "ListeFilms", new {idFilm=item?.Id})
+                }
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>

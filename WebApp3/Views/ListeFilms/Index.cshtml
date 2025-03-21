@@ -40,7 +40,7 @@
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.IdFilm">Edit</a> |
-                @Html.ActionLink("Supprimer", "Delete", "ListeFilms", new {item=item}) @* TODO FIX *@
+                @Html.ActionLink("Supprimer", "Delete", "ListeFilms", new {idFilm=item.IdFilm}) @* TODO FIX *@
             </td>
         </tr>
 }
